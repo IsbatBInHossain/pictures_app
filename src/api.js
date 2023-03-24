@@ -1,28 +1,21 @@
-const axios = require("axios");
-require("dotenv").config();
+import axios from "axios";
 
-const accessKey = process.env.UNSPLASH_ACCESS_KEY; // replace with your Unsplash access key
+const accessKey = process.env.REACT_APP_UNSPLASH_KEY;
 
-function searchImage(query) {
-  return axios
-    .get(`https://api.unsplash.com/search/photos?query=${query}`, {
+const searchImage = async (query) => {
+  try {
+    const response = await axios.get(`https://api.unsplash.com/search/photos`, {
       headers: {
         Authorization: `Client-ID ${accessKey}`,
       },
-    })
-    .then((response) => {
-      return response.data; // returns the response data
-    })
-    .catch((error) => {
-      throw error; // throws an error if there is one
+      params: {
+        query: query,
+      },
     });
-}
+    return response.data.results; // returns the response data
+  } catch (error) {
+    throw error; // throws an error if there is one
+  }
+};
 
-// Example usage:
-searchImage("nature")
-  .then((data) => {
-    console.log(data); // prints the response data to the console
-  })
-  .catch((error) => {
-    console.log(error); // prints the error to the console if there is one
-  });
+export default searchImage;
